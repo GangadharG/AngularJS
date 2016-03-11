@@ -1,3 +1,3 @@
 # AngularJS
 Angular Projects
-Practicing AngularJS
+Getting the grip of angularJS
