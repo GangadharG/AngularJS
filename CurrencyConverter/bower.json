@@ -1,0 +1,11 @@
+{
+  "name": "currencyconverter",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "gangadhar"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": ""
+}
