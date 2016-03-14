@@ -4,14 +4,21 @@ describe('Controller: CurrencyCtrl', function() {
 
     var scope,
         controller,
-        CurrencyService;
+        CurrencyService,
+        $q,
+        deferred;
 
-    beforeEach(inject(function(_$rootScope_, $controller, _CurrencyService_) {
+    beforeEach(inject(function(_$rootScope_, $controller, _CurrencyService_, _$q_) {
 
         $scope = _$rootScope_.$new();
         CurrencyService = _CurrencyService_;
+        $q = _$q_;
 
-        spyOn(CurrencyService, 'convertCurrency').and.returnValue(2);
+        deferred = _$q_.defer();
+
+        // Use a Jasmine Spy to return the deferred promise
+        spyOn(CurrencyService, 'getAvailableCurrencies').and.returnValue(deferred.promise);
+        //spyOn(CurrencyService, 'convertCurrency').and.returnValue(deferred.promise);
 
         controller = $controller('CurrencyCtrl', {
             $scope: $scope,
@@ -29,12 +36,28 @@ describe('Controller: CurrencyCtrl', function() {
         expect($scope.convert).toBeDefined();
     });
 
-    it('should call convertCurrency on CurrencyService on calling convert', function() {
-        $scope.toAmount = 2;
-        $scope.convert();
-        $scope.$digest();
-        expect(CurrencyService.convertCurrency).toHaveBeenCalled();
-        expect($scope.toAmount).toEqual(2);
+    it('should resolve promise', function() {
+        // Setup the data we wish to return for the .then function in the controller
+        deferred.resolve([{ }]);
+
+        // We have to call apply for this to work
+        $scope.$apply();
+
+        // Since we called apply, not we can perform our assertions
+        expect($scope.availCurrencies).not.toBe(undefined);
+        //expect($scope.error).toBe(undefined);
+    });
+
+    it('should reject promise', function() {
+        // This will call the .catch function in the controller
+        deferred.reject();
+
+        // We have to call apply for this to work
+        $scope.$apply();
+
+        // Since we called apply, not we can perform our assertions
+        expect($scope.availCurrencies).toBe(undefined);
+        //expect($scope.error).toBe(undefined);
     });
 
 });
